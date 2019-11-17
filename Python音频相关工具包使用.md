@@ -93,6 +93,54 @@ paFloat32, paInt32, paInt24, paInt16, paInt8, paUInt8, paCustomFormat
 
 
 
+### 音频信号
+
+下述内容，大多数摘抄自[这个博客]( https://blog.csdn.net/weixin_30824277/article/details/95092351 )
+
+音频信号的channel称之为声道。
+
+常见的有
+
+单声道(mono)， 
+
+双声道(stereo)包含左右声道， 
+
+2.1声道：双声道+低音声道
+
+5.1声道：包含正面声道，左前，右前，左环绕，右环绕，低音声道。最早应用于早期电影院
+
+7.1声道：5.1的基础上，将左右环绕拆分为左右环绕和左右后置声道，应用于BD和现代电影院。
+
+
+
+采样率
+
+8000Hz用于电话
+
+11025  AM调幅广播
+
+22050和24000  FM
+
+32000Hz， 数码视频
+
+44100    音频CD
+
+47250    商用PCM录音机
+
+48000    数字电视 DVD 电影 专业音频
+
+50000    商用数字录音机
+
+还有更高的，超过48000Hz对于人耳没有意义
+
+
+
+采样位数
+
+常用8bit 16bit 32bit  量化结果的编码可以用整型和浮点型两种存储，PCM常用整型，高精度常用浮点型
+
+
+
 
 
 
@@ -134,3 +182,34 @@ Volume = np.abs(Y)    #每个结果的幅值
 
 ~~~
 
+
+
+
+
+
+
+I am sorry。我的音乐合成似乎失败了
+
+我在尝试生成指定频率，持续时长，采样率的正弦波，然后输出到pyaudio进行播放，但是听起来似乎失败了，因为我并没有听到频率逐渐升高的音频，如果和winsound的Beep对比，也可以明显地发现生成的频率对应不上，我现在还不知道到底是怎么了。
+
+现在唯一成功的就是利用scipy将音频数据输出到wav文件中，这样得到的结果听起来似乎是可以的，代码如下：
+
+~~~python
+data = []
+for i in range(40, 20000, 400) :
+    sample_rate = 22050
+    volume = 3
+    t, wave = wave_generate(1, i, sample_rate, volume)
+    data += list(wave)
+
+data = np.array(data, dtype=np.float32)
+wavfile.write("test.wav", 22050, data)
+~~~
+
+但是没能直接播放，让我感觉很不爽。
+
+
+
+elegent scipy里面的例子我还没看懂，就直接生猛的找了一个叫做[freesound]( https://freesound.org/people/Jaz_the_MAN_2/sounds/316913/?page=2#comments )的网站下载了钢琴的单音，然后直接对这个音没有做任何多余的处理，读进来，平均左右声道，fft，画出频谱图，虽然看似的到了一些结果，但是频率的数值似乎不太对.......
+
+我不想搞了，最近对什么都无法提起兴趣。丧到爆炸。
